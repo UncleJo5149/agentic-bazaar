@@ -1,0 +1,51 @@
+{
+  "agents": {
+    "seller_north": {
+      "agent_id": "seller_north",
+      "name": "Northwind Skills",
+      "operator": "Maya Chen",
+      "public_key": "pk_seller_north",
+      "created_at": "2026-08-29T00:32:25.506661+00:00",
+      "reputation": 0.82,
+      "completed_jobs": 14
+    },
+    "seller_atlas": {
+      "agent_id": "seller_atlas",
+      "name": "Atlas Research",
+      "operator": "Omar Diallo",
+      "public_key": "pk_seller_atlas",
+      "created_at": "2026-08-29T00:32:26.491113+00:00",
+      "reputation": 0.82,
+      "completed_jobs": 14
+    }
+  },
+  "mandates": {},
+  "skills": {},
+  "quotes": {},
+  "intents": {},
+  "receipts": {},
+  "jobs": {},
+  "balances": {
+    "seller_north": {
+      "usd": 10.0,
+      "history": [
+        {
+          "ts": "2026-08-29T00:32:25.993078+00:00",
+          "delta": 10.0,
+          "reason": "seller-seed"
+        }
+      ]
+    },
+    "seller_atlas": {
+      "usd": 10.0,
+      "history": [
+        {
+          "ts": "2026-08-29T00:32:26.994274+00:00",
+          "delta": 10.0,
+          "reason": "seller-seed"
+        }
+      ]
+    }
+  },
+  "approvals": {}
+}
