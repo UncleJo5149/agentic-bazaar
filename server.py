@@ -11,6 +11,7 @@ from pathlib import Path
 from fastapi import FastAPI, Header, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from bazaar.models import (
@@ -37,14 +38,22 @@ from bazaar.skills import run_skill
 from bazaar.store import JsonStore
 
 ROOT = Path(__file__).resolve().parent
-DATA = Path("/tmp/agentic-bazaar-data")
+DATA = Path("/data")
 DATA.mkdir(parents=True, exist_ok=True)
 store = JsonStore(DATA / "bazaar.json")
 ledger = Ledger(store)
 router = PaymentRouter(store, ledger)
 
 app = FastAPI(title="Agentic Bazaar", version="0.1.0")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["PAYMENT-REQUIRED", "PAYMENT-RESPONSE"],
+)
 app.mount("/static", StaticFiles(directory=ROOT / "static"), name="static")
+
 
 
 def now() -> datetime:
