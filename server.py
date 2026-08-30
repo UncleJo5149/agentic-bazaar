@@ -11,8 +11,10 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse
 
-HOST = os.environ.get("BAZAAR_HOST", "127.0.0.1")
-PORT = int(os.environ.get("BAZAAR_PORT", "8787"))
+PORT = int(os.environ.get("PORT") or os.environ.get("BAZAAR_PORT", "8787"))
+_default_host = "0.0.0.0" if os.environ.get("PORT") else "127.0.0.1"
+HOST = os.environ.get("BAZAAR_HOST", _default_host)
+
 ROOT = Path(__file__).resolve().parent
 TREASURY_PATH = Path(os.environ.get("BAZAAR_TREASURY", str(ROOT / "treasury.json")))
 SGT = timezone(timedelta(hours=8))
