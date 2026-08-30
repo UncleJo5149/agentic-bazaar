@@ -1,0 +1,18 @@
+{
+  "updated_at": null,
+  "currency": "USD",
+  "settled_sales": 0.0,
+  "refunds": 0.0,
+  "net_profit": 0.0,
+  "commission_rate": 0.3,
+  "reserve_rate": 0.7,
+  "accrued_commission": 0.0,
+  "platform_reserve": 0.0,
+  "paid_commission": 0.0,
+  "payment_state": "ready_idle",
+  "sweep_status": "skipped_no_sales",
+  "last_sweep_at": null,
+  "deposit_address": "TTamF9HU3cYt2fDaTYB4ZUXfvcogBygC7w",
+  "usdt_contract": "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t",
+  "notes": "Example empty ledger. Copy to treasury.json."
+}
