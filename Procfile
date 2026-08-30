@@ -1,1 +1,1 @@
-web: python3 server.py
+web: python -m uvicorn server:app --host 0.0.0.0 --port $PORT
