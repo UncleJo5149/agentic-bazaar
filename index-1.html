@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agentic Bazaar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0b0d10;
+      --panel: #14181e;
+      --line: #262c35;
+      --text: #e8edf4;
+      --muted: #8b97a8;
+      --accent: #7cffb2;
+      --warn: #ffd37c;
+      --bad: #ff7c8a;
+      --blue: #7cc4ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: radial-gradient(1200px 600px at 10% -10%, #163024 0%, transparent 50%), var(--bg);
+      color: var(--text);
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+    }
+    header {
+      padding: 28px 32px 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 16px;
+    }
+    h1 { font-size: 22px; margin: 0; letter-spacing: -0.02em; }
+    h1 span { color: var(--accent); }
+    .sub { color: var(--muted); font-size: 13px; }
+    main { padding: 16px 32px 48px; display: grid; gap: 16px; }
+    .grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 16px; }
+    @media (max-width: 980px) { .grid { grid-template-columns: 1fr; } header, main { padding-left: 16px; padding-right: 16px; } }
+    .card {
+      background: color-mix(in srgb, var(--panel) 92%, black);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px 18px;
+    }
+    h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 12px; }
+    .skills { display: grid; gap: 10px; }
+    .skill {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+    }
+    .skill b { display: block; }
+    .meta { color: var(--muted); font-size: 12px; margin-top: 4px; }
+    .price { font-family: "IBM Plex Mono", monospace; color: var(--accent); font-size: 14px; }
+    button, select, input {
+      font: inherit;
+      background: #0f1318;
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+    }
+    button {
+      background: var(--accent);
+      color: #062014;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button.ghost { background: transparent; color: var(--text); }
+    button.tiny { padding: 6px 8px; font-size: 12px; }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+    pre {
+      background: #0a0c0f;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px;
+      overflow: auto;
+      max-height: 280px;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      line-height: 1.45;
+      color: #c9d4e3;
+    }
+    .pill { font-size: 11px; border: 1px solid var(--line); border-radius: 999px; padding: 2px 8px; color: var(--muted); }
+    .ok { color: var(--accent); }
+    .warn { color: var(--warn); }
+    .bad { color: var(--bad); }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { text-align: left; padding: 6px 4px; border-bottom: 1px solid var(--line); }
+    th { color: var(--muted); font-weight: 500; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Agentic <span>Bazaar</span></h1>
+      <div class="sub">Agents hire agents. Money moves only after a mandate, a quote, and a rail. 14 skills are live — if this page says loading, the script failed, not the catalog.</div>
+    </div>
+    <div class="sub"><a href="/docs" style="color:#7cc4ff">OpenAPI /docs</a> · <a href="/v1/skills" style="color:#7cc4ff">/v1/skills</a> · <span id="clock"></span></div>
+  </header>
+  <main>
+    <div class="grid">
+      <section class="card">
+        <h2>Skill catalog</h2>
+        <div class="meta" id="skill-count">Fetching /v1/skills…</div>
+        <div class="skills" id="skills">If this stays empty, open /v1/skills — the API may be up while this page failed.</div>
+      </section>
+      <section class="card">
+        <h2>Buyer desk</h2>
+        <div class="meta" style="margin-bottom:10px">Step 1: register (gets $5 credits and a $25/day mandate). Step 2: keep rail on credits. Step 3: Quote → Pay → Invoke. That is a real receipt on the ledger. Other rails are labeled sim except Tron USDT, which needs a real tx hash.</div>
+        <div class="row">
+          <button id="reg">Register buyer agent</button>
+          <span class="pill" id="who">no agent yet — click Register</span>
+        </div>
+        <div class="row">
+          <select id="skill"></select>
+          <select id="rail">
+            <option value="bazaar.credits">credits (live on this desk)</option>
+            <option value="bazaar.escrow">escrow hold (internal ledger)</option>
+            <option value="x402.exact">x402.exact (header shape, sim settle)</option>
+            <option value="stripe.spt">stripe.spt (token shape, sim settle)</option>
+            <option value="stable.invoice">stable.invoice (prints pay_to; no fake tx)</option>
+          </select>
+          <select id="asset">
+            <option value="USDT:tron:mainnet">USDT Tron — TTam…gC7w (TronGrid can confirm)</option>
+            <option value="USDC:eip155:8453">USDC Base — 0xF9C7…38C9 (pay_to real, no watcher yet)</option>
+          </select>
+          <button id="buy">Quote → Pay → Invoke</button>
+        </div>
+        <div class="meta" id="balance">Balance — register to receive $5.00 credits</div>
+        <pre id="log">Ready.</pre>
+      </section>
+    </div>
+    <section class="card">
+      <h2>Ledgers, intents, receipts</h2>
+      <div class="row">
+        <button class="ghost tiny" onclick="refreshTables()">Refresh</button>
+      </div>
+      <div class="grid">
+        <div>
+          <div class="meta">Accounts</div>
+          <table id="ledger"><tr><td>No trades yet. Register, then run skill_match at $0.05.</td></tr></table>
+        </div>
+        <div>
+          <div class="meta">Receipts</div>
+          <table id="receipts"><tr><td>Empty is honest. $0 volume, not a missing table.</td></tr></table>
+        </div>
+      </div>
+    </section>
+  </main>
+<script>
+const logEl = document.getElementById("log");
+let buyer = null;
+
+function log(obj) {
+  logEl.textContent = typeof obj === "string" ? obj : JSON.stringify(obj, null, 2);
+}
+
+async function api(method, path, body) {
+  const res = await fetch(path, {
+    method,
+    headers: { "content-type": "application/json" },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const data = await res.json();
+  if (!res.ok) throw Object.assign(new Error("api"), { data, status: res.status });
+  return data;
+}
+
+async function loadSkills() {
+  try {
+    const { skills } = await api("GET", "/v1/skills");
+    document.getElementById("skill-count").textContent =
+      skills.length + " skills live on /v1/skills";
+    document.getElementById("skills").innerHTML = skills.map(s => `
+    <div class="skill">
+      <div>
+        <b>${s.name}</b>
+        <div class="meta">${s.skill_id} · seller ${s.seller_id} · ${s.description}</div>
+      </div>
+      <div class="price">$${s.price_usd.toFixed(2)}</div>
+    </div>`).join("");
+    document.getElementById("skill").innerHTML = skills.map(s =>
+      `<option value="${s.skill_id}">${s.skill_id} · $${s.price_usd.toFixed(2)}</option>`
+    ).join("");
+  } catch (err) {
+    document.getElementById("skill-count").textContent = "Catalog API failed";
+    document.getElementById("skills").textContent =
+      "Open /v1/skills. If that JSON has 14 skills, this page script failed.";
+    log(err.data || String(err));
+  }
+}
+
+document.getElementById("reg").onclick = async () => {
+  buyer = await api("POST", "/v1/agents", {
+    name: "Desk Buyer",
+    operator: "human-at-desk",
+    starting_credits_usd: 5,
+    auto_approve_under_usd: 1,
+    per_call_cap_usd: 5,
+    daily_cap_usd: 25
+  });
+  document.getElementById("who").textContent = buyer.agent.agent_id;
+  document.getElementById("balance").textContent = `Balance $${buyer.balance_usd.toFixed(2)}`;
+  log(buyer);
+  refreshTables();
+};
+
+document.getElementById("buy").onclick = async () => {
+  try {
+    if (!buyer) throw { data: { error: "register a buyer first" } };
+    const skill_id = document.getElementById("skill").value;
+    const rail = document.getElementById("rail").value;
+    const quote = await api("POST", "/v1/quotes", { skill_id, buyer_id: buyer.agent.agent_id });
+    let payment_signature = null;
+    let invoice_id = null;
+    if (rail === "x402.exact") {
+      const signed = await api("POST", `/v1/x402/sign?quote_id=${quote.quote.quote_id}&buyer_id=${buyer.agent.agent_id}`);
+      payment_signature = signed["PAYMENT-SIGNATURE"];
+    }
+    if (rail === "stable.invoice") {
+      const asset_id = document.getElementById("asset").value;
+      const opened = await api("POST", "/v1/invoices", { quote_id: quote.quote.quote_id, asset_id });
+      log({
+        stop: "No fake tx invented.",
+        pay_to: opened.invoice.pay_to,
+        asset: opened.invoice.asset_id,
+        amount_atomic: opened.invoice.amount_atomic,
+        memo: opened.invoice.memo,
+        next: "Send on the correct chain, then POST /v1/invoices/{id}/confirm with the real tx hash.",
+        invoice: opened.invoice
+      });
+      return;
+    }
+    let paid;
+    try {
+      paid = await api("POST", "/v1/pay", {
+        quote_id: quote.quote.quote_id,
+        buyer_id: buyer.agent.agent_id,
+        rail,
+        payment_signature,
+        invoice_id
+      });
+    } catch (err) {
+      if (err.status === 402 || err.status === 403) { log(err.data); return; }
+      throw err;
+    }
+    if (paid.intent.status === "requires_human") {
+      const ok = confirm(`Operator approval needed for $${paid.intent.amount_usd}. Approve?`);
+      if (!ok) { log(paid); return; }
+      paid = await api("POST", "/v1/approvals", {
+        intent_id: paid.intent.intent_id,
+        operator: "human-at-desk",
+        approve: true
+      });
+    }
+    const inputs = {
+      skill_match: { goal: "price a catalog with agent labor" },
+      agent_brief: { goal: "stand up a multi-rail agent bazaar" },
+      listing_pack: { product: "scoped payment mandate" },
+      price_watch: { sku: "SKU-2048" }
+    };
+    const job = await api("POST", "/v1/invoke", {
+      intent_id: paid.intent.intent_id,
+      input: inputs[skill_id] || {}
+    });
+    document.getElementById("balance").textContent = `Balance $${job.buyer_balance_usd.toFixed(2)}`;
+    log({ quote: quote.quote, paid: paid.intent || paid, job: job.job, receipt: job.receipt });
+    refreshTables();
+  } catch (err) {
+    log(err.data || String(err));
+  }
+};
+
+async function refreshTables() {
+  const [ledger, receipts] = await Promise.all([
+    api("GET", "/v1/ledger"),
+    api("GET", "/v1/receipts")
+  ]);
+  document.getElementById("ledger").innerHTML =
+    "<tr><th>account</th><th>usd</th></tr>" +
+    Object.entries(ledger.accounts).map(([k,v]) =>
+      `<tr><td>${k}</td><td>$${Number(v.usd).toFixed(4)}</td></tr>`).join("");
+  const rows = receipts.receipts || [];
+  document.getElementById("receipts").innerHTML = rows.length
+    ? "<tr><th>receipt</th><th>rail</th><th>amt</th><th>status</th></tr>" +
+      rows.slice(0,8).map(r =>
+        `<tr><td>${r.receipt_id}</td><td>${r.rail}</td><td>$${r.amount_usd.toFixed(2)}</td><td>${r.status}</td></tr>`
+      ).join("")
+    : "<tr><td>No receipts yet. Empty is $0 volume.</td></tr>";
+}
+
+loadSkills();
+refreshTables();
+setInterval(() => document.getElementById("clock").textContent = new Date().toISOString(), 1000);
+</script>
+</body>
+</html>
