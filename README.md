@@ -1,70 +1,47 @@
-# Agentic Bazaar
+# Agent Till
 
-Local treasury and creator-commission control plane.
+Paid fetch-and-cite access for AI agents.
 
-This is not a wallet. It does not hold private keys and it does not broadcast USDT.
+Legal seller: **RENMOLT ETHICAL SYSTEMS**  
+Registration: **202603057004 (TR0338241-U)**  
+Form: registered business under the Registration of Businesses Act 1956 (not a Sdn Bhd).  
+Valid on the current Borang D until 25 February 2027.
 
-## Rules
+Humans are not the customer.
 
-- Creator commission = 30% of net profit (`settled_sales - refunds`)
-- Deposit: USDT TRC-20 `TTamF9HU3cYt2fDaTYB4ZUXfvcogBygC7w`
-- Contract: `TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t`
-- If accrued commission is `$0.00`, sweep is skipped
-- No invented transfers
-- On-chain reads only (TronGrid)
+## What is live in v0.1
 
-See `CHARTER.md`, `PRIMER.md`, `TERMS.md`, and `GUARDRAILS.md`.
+- Public page
+- `/.well-known/agent.json`
+- `/catalog.json`
+- `POST /a2a` skill: `fetch-cite`
+- HTTP 402 until a payment header is present
+- x402 verify + settle through `https://x402.org/facilitator`
+- Receipt split: 8% protocol fee, then 60% agent treasury / 40% steward
+- `/payments.json` and `/payments.txt` generated from live env
 
-Payment is designed to function with **zero transactions**: state `ready_idle`, sweep skipped, 30/70 split both at `$0.00`. That is live, not display-only.
-
-Keepers are accounting monitors. They do not hold keys and they do not spend the 70% reserve.
-
-## Run locally
-
-Requires Python 3.10+. No pip packages.
-
-```bash
-cp treasury.example.json treasury.json
-python3 server.py
-```
-
-API: `http://127.0.0.1:8787`
+## First closed loop
 
 ```bash
-curl http://127.0.0.1:8787/health
-curl http://127.0.0.1:8787/v1/treasury
-curl http://127.0.0.1:8787/v1/payments
-curl http://127.0.0.1:8787/v1/keepers
-curl -X POST http://127.0.0.1:8787/v1/payouts/sweep
-curl http://127.0.0.1:8787/v1/onchain
+sh scripts/loop-demo.sh
 ```
 
-## Docker
+Real 5¢ USDC on Base:
 
 ```bash
-docker compose up --build
+npm install @x402/fetch @x402/evm viem
+EVM_PRIVATE_KEY=0x... node scripts/buy-till-001.mjs
 ```
 
-Binds `8787`. Use `BAZAAR_HOST=0.0.0.0` inside the container (already set in compose).
+See `GO_LIVE_PAYMENT.md`.
 
-## Record real sales
+## GitHub → Railway
 
-Edit `treasury.json` (or `POST /v1/ledger`) with **actual** settled sales and refunds. Do not type fictional revenue to force a payout.
+1. Push this repo to GitHub.
+2. In Railway: New Project → Deploy from GitHub repo.
+3. Set `PUBLIC_BASE_URL`, `PAY_TO_ADDRESS`, `X402_NETWORK=eip155:8453`.
+4. Leave `ALLOW_DEMO` unset or `false` on mainnet.
 
-## What GitHub Actions does
+## Do not put on the public site
 
-`.github/workflows/smoke.yml` starts the server and checks `/health`. It does not send USDT.
-
-## Push to GitHub
-
-```bash
-git init
-git add CHARTER.md PRIMER.md TERMS.md GUARDRAILS.md README.md server.py \
-        treasury.example.json .gitignore Dockerfile compose.yaml scripts .github
-git commit -m "Add Agentic Bazaar operator stack"
-git branch -M main
-git remote add origin git@github.com:YOUR_USER/agentic-bazaar.git
-git push -u origin main
-```
-
-Do not commit wallets, keys, or a live `treasury.json` that contains invented balances.
+Home address from the SSM certificate. Name + registration number is enough.
