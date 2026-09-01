@@ -23,7 +23,8 @@ ASSETS: dict[str, dict[str, Any]] = {
         "transfer": "eip3009",
         "x402": True,
         "invoice": True,
-        "pay_to": "0xBazaarUSDC00000000000000000000000Base",
+        "pay_to": "0xF9C7c3022Bd8756E06172B37A6F9448a730638C9",
+,
     },
     "USDC:eip155:1": {
         "symbol": "USDC",
@@ -34,7 +35,8 @@ ASSETS: dict[str, dict[str, Any]] = {
         "transfer": "eip3009",
         "x402": True,
         "invoice": True,
-        "pay_to": "0xBazaarUSDC000000000000000000000000Eth",
+        "pay_to": "0xF9C7c3022Bd8756E06172B37A6F9448a730638C9",
+,
     },
     "USDC:solana:mainnet": {
         "symbol": "USDC",
@@ -56,7 +58,8 @@ ASSETS: dict[str, dict[str, Any]] = {
         "transfer": "permit2",  # USDT has no EIP-3009
         "x402": True,
         "invoice": True,
-        "pay_to": "0xBazaarUSDT000000000000000000000000Eth",
+        "pay_to": "0xF9C7c3022Bd8756E06172B37A6F9448a730638C9",
+,
     },
     "USDT:eip155:56": {
         "symbol": "USDT",
@@ -67,7 +70,8 @@ ASSETS: dict[str, dict[str, Any]] = {
         "transfer": "permit2",
         "x402": True,
         "invoice": True,
-        "pay_to": "0xBazaarUSDT00000000000000000000000BSC",
+        ""pay_to": "0xF9C7c3022Bd8756E06172B37A6F9448a730638C9",
+,
     },
     "USDT:tron:mainnet": {
         "symbol": "USDT",
